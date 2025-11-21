@@ -135,7 +135,12 @@ Lira/
 │       └── gradient_background.dart
 │── assets/
 │── backend/
-│   └── main.py (FastAPI + LLM endpoint)
+│   ├── app/
+│   │   ├── main.py (FastAPI factory)
+│   │   ├── routers/ (chat, stt, tts routes)
+│   │   ├── schemas.py (Pydantic models)
+│   │   └── services/ (LLM provider abstractions)
+│   └── requirements.txt
 │── README.md
 ```
 
@@ -163,8 +168,21 @@ flutter run
 ```
 cd backend
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn app:app --reload
 ```
+
+### 5. Configure environment
+Create a `.env` (or export vars) inside `backend/`:
+```
+LLM_BASE_URL=https://openrouter.ai/api
+LLM_API_KEY=sk-...
+LLM_MODEL=openrouter/mistral-7b-instruct
+```
+
+### 6. Connect Flutter ↔ Backend
+- `lib/screens/voice_analysis_screen.dart`: stream mic input via WebSocket to `/stt` to receive live transcripts.
+- `lib/screens/smart_chat_screen.dart`: send conversation payloads to `/chat` for agentic replies, then hit `/tts` for voice playback.
+- Keep last 5–10 turns in the payload to preserve memory until you add persistent storage.
 
 ---
 
@@ -175,6 +193,16 @@ uvicorn main:app --reload
 - Advanced conversation memory & reasoning  
 - Integrations with Neuroviate for multicultural empathy  
 - Polished UI animations and orb visualizer  
+
+---
+
+## 🗣️ Voice + Agentic Integration Checklist
+- **Audio capture (Flutter)**: use `record` or `flutter_sound` to stream PCM via WebSocket to the `/stt` endpoint. Buffer 1–2s chunks for responsiveness.
+- **Speech-to-Text (Python)**: replace the stub with Whisper (`faster-whisper`) or Vosk. Emit partial transcripts to the client so `voice_analysis_screen.dart` can display live text.
+- **Conversation hand-off**: send the latest transcript plus last 5–10 turns to `/chat`. The backend keeps persona prompts + temperature settings server-side.
+- **LLM provider config**: switch models using `LLM_MODEL` env var without touching Flutter. Supports OpenRouter, HuggingFace or local inference once you point `LLM_BASE_URL` accordingly.
+- **Text-to-Speech**: call `/tts` with the assistant reply. Implement Coqui TTS (offline) or `gTTS` for a quick cloud option; Flutter plays via `just_audio`.
+- **Memory + tools**: use `conversation` payload to pass lightweight memory now; later extend backend to persist slots and emit `tool_calls` for reminders, journaling, etc.
 
 ---
 
