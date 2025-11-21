@@ -33,6 +33,16 @@ It uses a cloned "grandma" voice to provide empathetic advice on daily life, emo
 
 ---
 
+## 📸 Screenshots
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Naomer/lira/567e552045b40a20d08d8f4bb99a7eb09be0e8e7/IMG_6680.PNG" alt="Lira Home Screen" width="300" />
+  <img src="https://raw.githubusercontent.com/Naomer/lira/3903e290a9d1f6220b24ad5193fe99a60056beb9/IMG_6681.PNG" alt="Lira Voice Screen" width="300" />
+</p>
+
+</p>
+
+---
+
 ## 🏗️ UI Components
 
 ### 1. Home / Dashboard Screen (`lib/screens/home_screen.dart`)
