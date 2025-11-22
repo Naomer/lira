@@ -3,6 +3,12 @@ import 'package:flutter/services.dart';
 import 'screens/home_screen.dart';
 import 'screens/voice_analysis_screen.dart';
 import 'screens/smart_chat_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/history_screen.dart';
+import 'screens/sparkle_actions_screen.dart';
+import 'screens/voice_to_text_screen.dart';
+import 'screens/image_generator_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +39,12 @@ class LiraApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/voice-analysis': (context) => const VoiceAnalysisScreen(),
         '/smart-chat': (context) => const SmartChatScreen(),
+        '/notifications': (context) => const NotificationsScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/history': (context) => const ActivityHistoryScreen(),
+        '/sparkle-actions': (context) => const SparkleActionsScreen(),
+        '/voice-to-text': (context) => const VoiceToTextScreen(),
+        '/image-generator': (context) => const ImageGeneratorScreen(),
       },
     );
   }

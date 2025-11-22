@@ -103,14 +103,17 @@ class _VoiceToTextScreenState extends State<VoiceToTextScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          _Tag(label: 'Auto-Punctuate'),
-                          const SizedBox(width: 8),
-                          _Tag(label: 'Timestamps'),
-                          const SizedBox(width: 8),
-                          _Tag(label: 'Summaries'),
-                        ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _Tag(label: 'Auto-Punctuate'),
+                            const SizedBox(width: 8),
+                            _Tag(label: 'Timestamps'),
+                            const SizedBox(width: 8),
+                            _Tag(label: 'Summaries'),
+                          ],
+                        ),
                       ),
                     ],
                   ),

@@ -49,6 +49,7 @@ class _ImageGeneratorScreenState extends State<ImageGeneratorScreen> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
                         'Prompt',

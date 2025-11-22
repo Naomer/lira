@@ -60,7 +60,12 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               IconButton(
                                 icon: Icon(PhosphorIcons.bell()),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/notifications',
+                                  );
+                                },
                               ),
                               Positioned(
                                 right: 8,
@@ -81,9 +86,9 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 30),
                       // Main prompt
                       const Text(
-                        'Good Morning\nHow can I help you?',
+                        'Good Morning How \ncan I help you?',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 23,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                           height: 1.2,
@@ -132,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                                         onTap: () {
                                           Navigator.pushNamed(
                                             context,
-                                            '/voice-analysis',
+                                            '/voice-to-text',
                                           );
                                         },
                                       ),
@@ -143,7 +148,12 @@ class HomeScreen extends StatelessWidget {
                                         icon: PhosphorIcons.image(),
                                         title: 'Image',
                                         subtitle: 'Image\nGenerator',
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/image-generator',
+                                          );
+                                        },
                                       ),
                                     ),
                                   ],
@@ -531,11 +541,36 @@ class _BottomNavBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _NavItem(icon: PhosphorIcons.house(), isActive: true),
-                  _NavItem(icon: PhosphorIcons.calendar()),
+                  _NavItem(
+                    icon: PhosphorIcons.house(),
+                    isActive: true,
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/home',
+                        (route) => false,
+                      );
+                    },
+                  ),
+                  _NavItem(
+                    icon: PhosphorIcons.calendar(),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/history');
+                    },
+                  ),
                   const SizedBox(width: 56), // Space for sparkle button
-                  _NavItem(icon: PhosphorIcons.chatCircle()),
-                  _NavItem(icon: PhosphorIcons.gear()),
+                  _NavItem(
+                    icon: PhosphorIcons.chatCircle(),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/smart-chat');
+                    },
+                  ),
+                  _NavItem(
+                    icon: PhosphorIcons.gear(),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
                 ],
               ),
             ),
@@ -544,24 +579,29 @@ class _BottomNavBar extends StatelessWidget {
           Positioned(
             left: centerX - 28,
             top: -15,
-            child: Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: const Color(0xFF9B7EDE),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF9B7EDE).withOpacity(0.4),
-                    blurRadius: 12,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Icon(
-                PhosphorIcons.sparkle(),
-                color: Colors.white,
-                size: 28,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/sparkle-actions');
+              },
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF9B7EDE),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF9B7EDE).withOpacity(0.4),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  PhosphorIcons.sparkle(),
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
           ),
@@ -632,15 +672,19 @@ class _CurvedNavBarClipper extends CustomClipper<Path> {
 class _NavItem extends StatelessWidget {
   final IconData icon;
   final bool isActive;
+  final VoidCallback? onTap;
 
-  const _NavItem({required this.icon, this.isActive = false});
+  const _NavItem({required this.icon, this.isActive = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      icon,
-      color: isActive ? const Color(0xFF9B7EDE) : Colors.grey[400],
-      size: 24,
+    return GestureDetector(
+      onTap: onTap,
+      child: Icon(
+        icon,
+        color: isActive ? const Color(0xFF9B7EDE) : Colors.grey[400],
+        size: 24,
+      ),
     );
   }
 }
