@@ -57,7 +57,7 @@ class LLMService:
 
 @lru_cache
 def _llm_http_client() -> httpx.AsyncClient:
-    base_url = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api")
+    base_url = os.getenv("LLM_API_BASE_URL", "https://openrouter.ai/api/v1")
     api_key = os.getenv("LLM_API_KEY")
     headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
 

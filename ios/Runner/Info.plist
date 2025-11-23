@@ -45,5 +45,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Microphone permission for voice recording -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Lira needs access to your microphone to listen to your voice and provide voice-based assistance.</string>
 </dict>
 </plist>

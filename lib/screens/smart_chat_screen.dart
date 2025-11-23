@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../utils/gradient_background.dart';
+import '../models/chat_message.dart';
+import '../services/voice_assistant_service.dart';
 
 class SmartChatScreen extends StatefulWidget {
   const SmartChatScreen({super.key});
@@ -12,47 +14,83 @@ class SmartChatScreen extends StatefulWidget {
 class _SmartChatScreenState extends State<SmartChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final VoiceAssistantService _voiceService = VoiceAssistantService();
 
-  final List<ChatMessage> _messages = [
+  List<ChatMessage> _messages = [
     ChatMessage(
       text: "Hi! How can I assist you today? 👋",
       isAI: true,
       hasSparkle: true,
     ),
-    ChatMessage(text: "What is web3?", isAI: false),
-    ChatMessage(text: "", isAI: false, isAudio: true, audioDuration: "00:05"),
-    ChatMessage(
-      text:
-          "What is Web3? Web3 is a decentralized internet built on blockchain, giving users control over their data, identity, and digital assets.",
-      isAI: true,
-      hasSparkle: true,
-    ),
-    ChatMessage(
-      text:
-          "🌍 Key Features of Web3:\n\n1. Decentralization\n• No central authority (data is stored across multiple nodes, not in one place).\n• Users own their content and identity",
-      isAI: true,
-      hasSparkle: false,
-    ),
   ];
+  bool _isProcessing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeService();
+  }
+
+  Future<void> _initializeService() async {
+    await _voiceService.initialize();
+    // Load conversation history from service
+    setState(() {
+      _messages = [
+        ChatMessage(
+          text: "Hi! How can I assist you today? 👋",
+          isAI: true,
+          hasSparkle: true,
+        ),
+        ..._voiceService.conversationHistory,
+      ];
+    });
+  }
 
   @override
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
+    _voiceService.dispose();
     super.dispose();
   }
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  Future<void> _sendMessage() async {
+    if (_messageController.text.trim().isEmpty || _isProcessing) return;
+
+    final userMessage = _messageController.text.trim();
+    _messageController.clear();
 
     setState(() {
-      _messages.add(
-        ChatMessage(text: _messageController.text.trim(), isAI: false),
-      );
-      _messageController.clear();
+      _messages.add(ChatMessage(text: userMessage, isAI: false));
+      _isProcessing = true;
     });
 
     _scrollToBottom();
+
+    try {
+      final response = await _voiceService.sendTextMessage(userMessage);
+
+      setState(() {
+        _messages.add(
+          ChatMessage(text: response, isAI: true, hasSparkle: true),
+        );
+        _isProcessing = false;
+      });
+
+      _scrollToBottom();
+    } catch (e) {
+      setState(() {
+        _messages.add(
+          ChatMessage(
+            text: "Sorry, I encountered an error: $e",
+            isAI: true,
+            hasSparkle: false,
+          ),
+        );
+        _isProcessing = false;
+      });
+      _scrollToBottom();
+    }
   }
 
   void _scrollToBottom() {
@@ -253,22 +291,6 @@ class _SmartChatScreenState extends State<SmartChatScreen> {
       ),
     );
   }
-}
-
-class ChatMessage {
-  final String text;
-  final bool isAI;
-  final bool hasSparkle;
-  final bool isAudio;
-  final String audioDuration;
-
-  ChatMessage({
-    required this.text,
-    required this.isAI,
-    this.hasSparkle = false,
-    this.isAudio = false,
-    this.audioDuration = '',
-  });
 }
 
 class _ChatBubble extends StatelessWidget {

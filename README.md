@@ -165,24 +165,29 @@ flutter run
 ```
 
 ### 4. Backend setup
-```
+```bash
 cd backend
 pip install -r requirements.txt
-uvicorn app:app --reload
+cp .env.example .env
+# Edit .env and add your LLM API key
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### 5. Configure environment
-Create a `.env` (or export vars) inside `backend/`:
-```
-LLM_BASE_URL=https://openrouter.ai/api
+Edit `backend/.env`:
+```env
+LLM_API_BASE_URL=https://openrouter.ai/api/v1
 LLM_API_KEY=sk-...
-LLM_MODEL=openrouter/mistral-7b-instruct
+LLM_MODEL=mistralai/mistral-7b-instruct
 ```
 
-### 6. Connect Flutter ↔ Backend
-- `lib/screens/voice_analysis_screen.dart`: stream mic input via WebSocket to `/stt` to receive live transcripts.
-- `lib/screens/smart_chat_screen.dart`: send conversation payloads to `/chat` for agentic replies, then hit `/tts` for voice playback.
-- Keep last 5–10 turns in the payload to preserve memory until you add persistent storage.
+### 6. Configure Flutter backend URL
+Edit `lib/config/api_config.dart` and set your backend URL:
+- Local: `http://localhost:8000`
+- Android Emulator: `http://10.0.2.2:8000`
+- Physical device: `http://YOUR_COMPUTER_IP:8000`
+
+**📖 For detailed setup instructions, see [SETUP.md](SETUP.md)**
 
 ---
 

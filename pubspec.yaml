@@ -39,6 +39,15 @@ dependencies:
   google_fonts: ^6.1.0
   animated_text_kit: ^4.2.2
   phosphor_flutter: ^2.1.0
+  
+  # Audio & Voice
+  flutter_sound: ^9.2.13
+  audioplayers: ^5.2.1
+  path_provider: ^2.1.1
+  permission_handler: ^11.1.0
+  
+  # Networking
+  http: ^1.1.2
 
 dev_dependencies:
   flutter_test:
