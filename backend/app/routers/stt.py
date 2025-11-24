@@ -3,12 +3,19 @@ import io
 import tempfile
 from pathlib import Path
 
-import whisper
 from fastapi import APIRouter, HTTPException
 
 from ..schemas import STTRequest, TranscriptionChunk
 
 router = APIRouter()
+
+# Try to import whisper, but handle if it's not installed
+try:
+    import whisper
+    WHISPER_AVAILABLE = True
+except ImportError:
+    WHISPER_AVAILABLE = False
+    whisper = None
 
 # Global Whisper model cache
 _whisper_model_cache = {}
@@ -16,6 +23,12 @@ _whisper_model_cache = {}
 
 def get_whisper_model(model_size: str = "tiny"):
     """Load Whisper model (cached)."""
+    if not WHISPER_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="Whisper is not installed. Install with: py -m pip install openai-whisper",
+        )
+    
     if model_size not in _whisper_model_cache:
         try:
             _whisper_model_cache[model_size] = whisper.load_model(model_size)

@@ -2,12 +2,19 @@ import base64
 import tempfile
 from pathlib import Path
 
-from TTS.api import TTS
 from fastapi import APIRouter, HTTPException
 
 from ..schemas import TTSRequest, TTSResponse
 
 router = APIRouter()
+
+# Try to import TTS, but handle if it's not installed
+try:
+    from TTS.api import TTS
+    TTS_AVAILABLE = True
+except ImportError:
+    TTS_AVAILABLE = False
+    TTS = None
 
 # Global TTS model cache
 _tts_model_cache = {}
@@ -20,6 +27,12 @@ def get_tts_model(voice: str = "grandma"):
     For 'grandma' voice, we use a warm, empathetic model.
     Falls back to default English model if specific voice not available.
     """
+    if not TTS_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="TTS is not installed. Install with: py -m pip install TTS",
+        )
+    
     cache_key = voice
     
     if cache_key not in _tts_model_cache:
