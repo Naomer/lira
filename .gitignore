@@ -46,8 +46,11 @@ app.*.map.json
 
 # Python virtual environment
 venv/
-__pycache__/
+backend/venv/
+**/venv/
+**/__pycache__/
 *.pyc
+.env
 *.pyo
 *.pyd
 *.swp
