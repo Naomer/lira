@@ -43,13 +43,18 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+android/build/
+**/build/reports/
+*.exe
 
 # Python virtual environment
 venv/
 backend/venv/
 backend/Lib/
+backend/Scripts/
 **/venv/
 **/Lib/
+**/Scripts/
 **/__pycache__/
 *.pyc
 .env
