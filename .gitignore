@@ -47,7 +47,9 @@ app.*.map.json
 # Python virtual environment
 venv/
 backend/venv/
+backend/Lib/
 **/venv/
+**/Lib/
 **/__pycache__/
 *.pyc
 .env
